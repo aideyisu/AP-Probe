@@ -1,0 +1,112 @@
+<DOCTYPE html>
+<html>
+    <head>
+        <title>Wait 60s to check the WPA</title>
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <style>
+            *{  
+        margin: 0;  
+        padding: 0;  
+    }  
+    .wrap,.circle,.percent{  
+        position: absolute;  
+        width: 146px;  
+        height: 146px;  
+        border-radius: 50%;  
+    }  
+  .wrap{  
+        margin-top: 50px;
+        margin-left: 50px;
+    }  
+    .circle{  
+        box-sizing: border-box;  
+        border:10px solid transparent;  
+        clip:rect(0,146px,146px,73px);  
+    }  
+    .clip-auto{  
+        clip:rect(auto, auto, auto, auto);  
+    }  
+    .percent{  
+        box-sizing: border-box;  
+        top:-10px;  
+        left:-10px;  
+    }  
+    .left{  
+        transition:transform ease;  
+        border:10px solid gray;  
+        clip: rect(0,73px,146px,0);  
+    }  
+    .right{  
+        border:10px solid gray;  
+        clip: rect(0,146px,146px,73px);  
+    }  
+    .wth0{  
+        width:0;  
+    }  
+    .num{  
+        position: absolute;  
+        box-sizing: border-box;  
+        text-align: center;  
+        font-size: 16px;  
+        left: calc(50% - 16px);
+        top: calc(50% - 16px);
+        border-radius: 50%;  
+        background-color: #fff;  
+        z-index: 1;  
+    }  
+    .circlr_trans{
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        left: calc(50% - 8px);
+        top: -3px;
+        background-color:black;
+        transform-origin: 50% 76px; 
+    }
+</style>
+    </head>
+    <body>
+            <div class="wrap">  
+                    <div class="circle">
+                        <div class="percent left"></div>  
+                        <div class="percent right wth0"></div>        
+                    </div>  
+                    <div class="circlr_trans"></div>
+                    <div class="num"><span>0</span>s</div> 
+                </div>
+    <script>
+        var percent=0;  
+    var loading=setInterval(function(){  
+        if(percent>=360){ 
+            clearInterval(loading);
+            return false;
+            percent=0;  
+            $('.circle').removeClass('clip-auto');  
+            $('.right').addClass('wth0'); 
+        }else if(percent>=180){  
+            $('.circle').addClass('clip-auto');  
+            $('.right').removeClass('wth0');  
+        }  
+    //1秒转6度         60秒 转360度
+        percent+=6; 
+        $('.left').css("-webkit-transform","rotate("+percent+"deg)");  
+        $('.circlr_trans').css("-webkit-transform","rotate("+percent+"deg)");  
+        $('.num>span').text(percent.toFixed(0)/6);           
+    },1000);
+    </script>
+    <script> 
+        var t= 60;//设定跳转的时间 
+        setInterval("refer()",1000); //启动1秒定时 
+        function refer(){ 
+        if(t==0){ 
+        location="http://127.0.0.1:5000/aircrack"; //#设定跳转的链接地址 
+        } 
+        document.getElementById('show').innerHTML=""+t+"second to check the WPA "; // 显示倒计时 
+        t--; // 计数器递减 
+        //本文转自： 
+        } 
+        </script> 
+        <span id="show"></span>
+    </body>
+</html>
