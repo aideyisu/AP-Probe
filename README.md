@@ -74,6 +74,16 @@ Kali-Linux中配置了aircrack-ng,无需再次安装
 
 采用经典后端架构设计,代码主逻辑放在main.py文件中,通过jinja语法将前后端联通；通过subprocess管道化通信调用aircrack-ng
 
+![架构设计](images/架构设计.png)
+
+基于python-flask为核心设计
+
+通过kali中环境设置，外接网卡作为底层支持
+
+通过pywifi捕获周围AP节点，下发指令给aircrack-ng进行指令操作
+
+最终数据可以通过浏览器进行可视化展示
+
 ## 运行截图
 
 ![感知](images/感知.jpg)
@@ -108,6 +118,8 @@ flood洪水攻击界面
 
 deautenticate数据包使得设备与AP之间断开连接
 
+
+
 ## 技术原理
 
 #### flood泛洪攻击
@@ -125,6 +137,8 @@ aireplay-ng -0 10 -a ap_mac -c 合法客户端mac wifi0
 
 利用了pywifi模块与aircrack-ng的监听功能实现无线AP感知
 
+
+
 ###### threading:
 
 python多线程模块,提供并发处理
@@ -137,13 +151,21 @@ python多线程模块,提供并发处理
 
 Python的标准库提供了两个模块：_thread和threading，_thread是低级模块，threading是高级模块，对_thread进行了封装。绝大多数情况下，我们只需要使用threading这个高级模块。
 
-Lock
+
+
+###### Lock
+
 多线程和多进程最大的不同在于，多进程中，同一个变量，各自有一份拷贝存在于每个进程中，互不影响，而多线程中，所有变量都由所有线程共享，所以，任何一个变量都可以被任何一个线程修改，因此，线程之间共享数据最大的危险在于多个线程同时改一个变量，把内容给改乱了。
 
+
+
 ###### pywifi:
+
 参考链接 https://pypi.org/project/pywifi/
 
 linux中需要支持wpa_supplicant才能操作wifi设备,pywifi通过socket通信进行具体操作
+
+
 
 ###### aircrack-ng:
 先将网卡设置为aircrack-ng认证的监听模式
@@ -156,13 +178,20 @@ airodump-ng wlan0
 ```
 注：airodump-ng <你的monitor名称>
 
+
+
+###### 监听过程名词解释
+
 BSSID是AP端的MAC地址
 PWR是信号强度，数字越小越好
 #Data是对应的路由器的在线数据吞吐量，数字越大，数据上传量越大。
 CH是对应路由器的所在频道
 ESSID是对应路由器的名称
 
-捕获握手包
+
+
+###### 捕获握手包
+
 – 使用airodump-ng监听指定目标频道。
 sudo airodump-ng -c 6 -w Desktop/handshake --bssid C0:00:00:00:00:48 wlan0mon
 
@@ -178,6 +207,8 @@ sudo airodump-ng -c 6 -w Desktop/handshake --bssid C0:00:00:00:00:48 wlan0mon
 **注**：请注意右上方（日期和时间右边的区域），如红色方框所示。以及在STATION栏中的Client MAC地址，选取一个客户端MAC地址并记录。
 
 
+
+###### 其余功能
 
 **– 关闭监听模式。**
 
@@ -202,6 +233,8 @@ sudo airmon-ng stop wlan0mon
 
 ![破解字典成功](images/破解字典成功.png)
 
+
+
 ## 制作简单字典
 
 在Linux中可以使用crunch来制作一个简单的字典，下面是自作方法。
@@ -211,10 +244,15 @@ sudo airmon-ng stop wlan0mon
 使用语法 crunch <min> max<max> <characterset> -t <pattern> -o <output filename>
 例如，如果您知道目标的生日是0728（7月28日），并且认为他们以自己的密码包含他们生日，则可以生成一个以0728为结尾的密码列表，方法为@@@@@@@0728。 该字最多可生成11个字符（7个变量和4个固定）密码，然后全部都以0728结尾
 
+
+
 ## 注意
+
 wpa/wpa2的密码破解较为随机,破解的成败完全靠一个适合的字典，不管怎么说，一个强大字典是肯定可以提高破解的成功几率。
 
 本软件用于审核家庭无线路由器安全性,破解别人的无线路由器密码是违法的，放弃WEP，真爱WPA2，禁用WPS
 
-推荐外接网卡
+
+
+推荐使用外接网卡
 
